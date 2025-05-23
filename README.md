@@ -7,7 +7,7 @@
 #### ➕ Add Employee
 
 ```bash
-curl -X POST http://localhost:3000/employee \
+curl -X POST https://salary-database.onrender.com/employee \
   -H "Content-Type: application/json" \
   -d '{
     "name": "John Doe",
@@ -31,19 +31,19 @@ curl -X POST http://localhost:3000/employee \
 #### 📄 Get All Employees
 
 ```bash
-curl http://localhost:3000/
+curl https://salary-database.onrender.com/
 ```
 
 #### 🔍 Get Employee by Number
 
 ```bash
-curl http://localhost:3000/EMP001
+curl https://salary-database.onrender.com/EMP001
 ```
 
 #### ✏️ Update Employee
 
 ```bash
-curl -X PUT http://localhost:3000/EMP001 \
+curl -X PUT https://salary-database.onrender.com/EMP001 \
   -H "Content-Type: application/json" \
   -d '{
     "baseSalary": 55000,
@@ -54,7 +54,7 @@ curl -X PUT http://localhost:3000/EMP001 \
 #### ❌ Delete Employee
 
 ```bash
-curl -X DELETE http://localhost:3000/EMP001
+curl -X DELETE https://salary-database.onrender.com/EMP001
 ```
 
 ---
@@ -64,7 +64,7 @@ curl -X DELETE http://localhost:3000/EMP001
 #### ➕ Generate Salary Slip
 
 ```bash
-curl -X POST http://localhost:3000/generate \
+curl -X POST https://salary-database.onrender.com/generate \
   -H "Content-Type: application/json" \
   -d '{
     "employeeNumber": "EMP001",
@@ -82,13 +82,13 @@ curl -X POST http://localhost:3000/generate \
 #### 🔍 Get Salary Slip by Employee Number
 
 ```bash
-curl http://localhost:3000/EMP001
+curl https://salary-database.onrender.com/EMP001
 ```
 
 #### ✏️ Update Salary Slip
 
 ```bash
-curl -X PUT http://localhost:3000/EMP001 \
+curl -X PUT https://salary-database.onrender.com/EMP001 \
   -H "Content-Type: application/json" \
   -d '{
     "tds": 700
@@ -98,7 +98,7 @@ curl -X PUT http://localhost:3000/EMP001 \
 #### ❌ Delete Salary Slip
 
 ```bash
-curl -X DELETE http://localhost:3000/EMP001
+curl -X DELETE https://salary-database.onrender.com/EMP001
 ```
 
 ---
@@ -108,7 +108,7 @@ curl -X DELETE http://localhost:3000/EMP001
 #### 🧾 Generate Experience Letter
 
 ```bash
-curl -X POST http://localhost:3000/generate-experience-letter \
+curl -X POST https://salary-database.onrender.com/generate-experience-letter \
   -H "Content-Type: application/json" \
   -d '{
     "employeeNumber": "EMP001",
@@ -119,7 +119,7 @@ curl -X POST http://localhost:3000/generate-experience-letter \
 #### 🧾 Generate Relieving Letter
 
 ```bash
-curl -X POST http://localhost:3000/generate-relieving-letter \
+curl -X POST https://salary-database.onrender.com/generate-relieving-letter \
   -H "Content-Type: application/json" \
   -d '{
     "employeeNumber": "EMP001",
