@@ -64,18 +64,33 @@ curl -X DELETE https://salary-database.onrender.com/EMP001
 #### ➕ Generate Salary Slip
 
 ```bash
-curl -X POST https://salary-database.onrender.com/generate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "employeeNumber": "EMP001",
-    "baseSalary": 55000,
-    "increment": 3000,
-    "da": 3500,
-    "hra": 4000,
+curl --location 'http://localhost:3000/generate' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "John Doe",
+    "designation": "Software Engineer",
+    "department": "Development",
+    "employeeNumber": "EMP12345",
+    "companyName": "Tech Corp",
+    "baseSalary": 50000,
+    "increment": 5000,
+    "da": 2000,
+    "hra": 3000,
     "specialAllowance": 1500,
     "lopAmount": 1000,
     "professionalTax": 200,
-    "tds": 500
+    "tds": 1500,
+    "totalWorkingDays": 30,
+    "actualPayableDays": 28,
+    "paidLeave": 2,
+    "lopDays": 0,
+    "date": "27-05-2025",
+    "month": "May 2025",
+    "dateOfJoining": "01-01-2020",
+    "dateOfBirth": "15-07-1990",
+    "address": "123 Main St, City",
+    "phoneNumber": "1234567890",
+    "email": "john.doe@example.com"
   }'
 ```
 
