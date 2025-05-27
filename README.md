@@ -84,7 +84,77 @@ curl -X POST https://salary-database.onrender.com/generate \
 ```bash
 curl https://salary-database.onrender.com/EMP001
 ```
+#### 🔍 Get All Salary Slip by Employee Number
 
+```bash
+curl --location 'http://localhost:3000/EMP003/all' 
+res 
+
+[
+    {
+        "id": 1,
+        "name": "Akash Mehta",
+        "designation": "Product Manager",
+        "department": "Product",
+        "employeeNumber": "EMP003",
+        "companyName": "Skoegle IOT Innovations Pvt Ltd",
+        "baseSalary": 80000,
+        "increment": 7000,
+        "da": 3500,
+        "hra": 6000,
+        "specialAllowance": 8001,
+        "lopAmount": 0,
+        "professionalTax": 200,
+        "tds": 500,
+        "totalWorkingDays": 30,
+        "actualPayableDays": 30,
+        "paidLeave": 0,
+        "lopDays": 0,
+        "date": "2025-05-27",
+        "month": "May 2025",
+        "dateOfJoining": "19-02-2025",
+        "dateOfBirth": "19-08-2002",
+        "address": "89 Green Park, Delhi",
+        "phoneNumber": "8899776655",
+        "email": "akash.mehta@skoegle.com",
+        "totalEarnings": 104501,
+        "netPayable": 103801,
+        "createdAt": "2025-05-27T06:36:11.656Z",
+        "updatedAt": "2025-05-27T06:36:11.656Z"
+    },
+    {
+        "id": 2,
+        "name": "Akash Mehta",
+        "designation": "Product Manager",
+        "department": "Product",
+        "employeeNumber": "EMP003",
+        "companyName": "Skoegle IOT Innovations Pvt Ltd",
+        "baseSalary": 80000,
+        "increment": 7000,
+        "da": 3500,
+        "hra": 6000,
+        "specialAllowance": 8001,
+        "lopAmount": 0,
+        "professionalTax": 200,
+        "tds": 500,
+        "totalWorkingDays": 30,
+        "actualPayableDays": 30,
+        "paidLeave": 0,
+        "lopDays": 0,
+        "date": "2025-05-27",
+        "month": "May 2025",
+        "dateOfJoining": "19-02-2025",
+        "dateOfBirth": "19-08-2002",
+        "address": "89 Green Park, Delhi",
+        "phoneNumber": "8899776655",
+        "email": "akash.mehta@skoegle.com",
+        "totalEarnings": 104501,
+        "netPayable": 103801,
+        "createdAt": "2025-05-27T06:36:48.723Z",
+        "updatedAt": "2025-05-27T06:36:48.723Z"
+    }
+]
+```
 #### ✏️ Update Salary Slip
 
 ```bash
