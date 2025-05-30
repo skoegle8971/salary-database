@@ -182,6 +182,21 @@ app.get('/:employeeNumber', async (req, res) => {
 });
 
 
+app.get("/:employeeNumber/all", async (req, res) => {
+  try {
+    const slips = await SalarySlip.findAll({
+      where: { employeeNumber: req.params.employeeNumber }
+    });
+
+    if (slips.length === 0) return res.status(404).json({ error: 'No salary slips found for this employee' });
+
+    res.json(slips);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching salary slips' });
+  }
+});
+
+
 app.put('/:employeeNumber', async (req, res) => {
   try {
     const { employeeNumber } = req.params;
