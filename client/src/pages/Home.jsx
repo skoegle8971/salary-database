@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ IMPORT THIS
 import axios from 'axios';
 import {
   Container, Typography, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent,
   TextField, DialogActions, IconButton
 } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+import { Edit, Delete, Receipt } from '@mui/icons-material';
 
 export default function Home() {
+  const navigate = useNavigate(); // ✅ INITIALIZE IT HERE
   const [employees, setEmployees] = useState([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -20,7 +22,7 @@ export default function Home() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get('https://salary-database.onrender.com');
+      const res = await axios.get('http://localhost:3000');
       setEmployees(res.data);
     } catch (err) {
       console.error('Error fetching employees:', err);
@@ -46,9 +48,18 @@ export default function Home() {
     setOpen(true);
   };
 
+  const handleSalarySlipClick = async (employeeNumber) => {
+    try {
+      const res = await axios.get(`http://localhost:3000/${employeeNumber}`);
+      navigate(`/salary-slip/${employeeNumber}`, { state: { employeeData: res.data } });
+    } catch (err) {
+      console.error('Error fetching salary slip data:', err);
+    }
+  };
+
   const handleEditClick = async (employeeNumber) => {
     try {
-      const res = await axios.get(`https://salary-database.onrender.com/${employeeNumber}`);
+      const res = await axios.get(`http://localhost:3000/${employeeNumber}`);
       setFormData(res.data);
       setEditing(true);
       setOpen(true);
@@ -60,7 +71,7 @@ export default function Home() {
   const handleDeleteClick = async (employeeNumber) => {
     if (confirm('Are you sure you want to delete this employee?')) {
       try {
-        await axios.delete(`https://salary-database.onrender.com/${employeeNumber}`);
+        await axios.delete(`http://localhost:3000/${employeeNumber}`);
         fetchEmployees();
       } catch (err) {
         console.error('Error deleting employee:', err);
@@ -71,7 +82,7 @@ export default function Home() {
   const handleSubmit = async () => {
     try {
       if (editing) {
-        await axios.put(`https://salary-database.onrender.com/${formData.employeeNumber}`, {
+        await axios.put(`http://localhost:3000/${formData.employeeNumber}`, {
           baseSalary: Number(formData.baseSalary),
           increment: Number(formData.increment),
           da: Number(formData.da),
@@ -79,7 +90,7 @@ export default function Home() {
           specialAllowance: Number(formData.specialAllowance),
         });
       } else {
-        await axios.post('https://salary-database.onrender.com/employee', formData);
+        await axios.post('http://localhost:3000/employee', formData);
       }
       setOpen(false);
       fetchEmployees();
@@ -119,6 +130,9 @@ export default function Home() {
                 <TableCell>{emp.phoneNumber}</TableCell>
                 <TableCell>{emp.totalEarnings}</TableCell>
                 <TableCell>
+                  <IconButton color="success" onClick={() => handleSalarySlipClick(emp.employeeNumber)}>
+                    <Receipt />
+                  </IconButton>
                   <IconButton color="primary" onClick={() => handleEditClick(emp.employeeNumber)}>
                     <Edit />
                   </IconButton>
@@ -147,7 +161,7 @@ export default function Home() {
               variant="outlined"
               value={formData[key]}
               onChange={handleChange}
-              disabled={editing && key === 'employeeNumber'} // Prevent changing employeeNumber on edit
+              disabled={editing && key === 'employeeNumber'}
             />
           ))}
         </DialogContent>
