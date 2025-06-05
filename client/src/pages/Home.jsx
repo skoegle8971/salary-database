@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ IMPORT THIS
+import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 import {
   Container, Typography, Table, TableBody, TableCell, TableContainer,
@@ -9,7 +9,7 @@ import {
 import { Edit, Delete, Receipt } from '@mui/icons-material';
 
 export default function Home() {
-  const navigate = useNavigate(); // ✅ INITIALIZE IT HERE
+  const navigate = useNavigate(); 
   const [employees, setEmployees] = useState([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -50,8 +50,8 @@ export default function Home() {
 
   const handleSalarySlipClick = async (employeeNumber) => {
     try {
-      const res = await axios.get(`http://localhost:3000/${employeeNumber}`);
-      navigate(`/salary-slip/${employeeNumber}`, { state: { employeeData: res.data } });
+      // const res = await axios.get(`http://localhost:3000/${employeeNumber}`);
+      navigate(`/salary-slip/${employeeNumber}`);
     } catch (err) {
       console.error('Error fetching salary slip data:', err);
     }

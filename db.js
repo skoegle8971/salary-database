@@ -1,8 +1,7 @@
-// test.js
 const  { Sequelize } =require('sequelize');
 
 const sequelize = new Sequelize(
-  "postgresql://skoegle_user:06NCIZaTkMFtWWYQf4C4AtFq4aa62CLV@dpg-d08sqvpr0fns73dp1a1g-a.oregon-postgres.render.com/skoegle",
+  "postgresql://skoegle_y5bj_user:Ea9kRVMY3eq5PDlgD9p03wlf6muF86eg@dpg-d0slt0c9c44c73f9v500-a.virginia-postgres.render.com/skoegle_y5bj",
   {
     dialect: 'postgres',
     dialectOptions: {
@@ -14,9 +13,6 @@ const sequelize = new Sequelize(
     logging: false
   }
 );
-
-
-
 
 function connectToDatabase() {
   sequelize.authenticate()

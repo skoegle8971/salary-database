@@ -1,25 +1,30 @@
-import React from 'react';
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from './pages/Home.jsx';
-import SalarySlipPage from "./pages/SalarySlipPage.jsx";
+import React, { Suspense, lazy } from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-// Define all application routes
+const Home = lazy(() => import('./pages/Home.jsx'));
+const SalarySlipPage = lazy(() => import('./pages/SalarySlipPage.jsx'));
+
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />
+    path: '/',
+    element: (
+      <Suspense fallback={<div>Loading Home...</div>}>
+        <Home />
+      </Suspense> 
+    ),
   },
   {
-    path: "/salary-slip/:employeeNumber", // Dynamic route
-    element: <SalarySlipPage />
-  }
+    path: '/salary-slip/:employeeNumber',
+    element: (
+      <Suspense fallback={<div>Loading Salary Slip...</div>}>
+        <SalarySlipPage />
+      </Suspense>
+    ),
+  },
 ]);
 
-// Main app component
 function App() {
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -131,27 +131,28 @@ app.delete('/:employeeNumber', async (req, res) => {
 
 
 
-
-
 app.post('/generate', async (req, res) => {
   try {
     const data = req.body;
 
-    // Calculate total earnings
     const totalEarnings =
       (parseFloat(data.baseSalary || 0) +
-      parseFloat(data.increment || 0) +
-      parseFloat(data.da || 0) +
-      parseFloat(data.hra || 0) +
-      parseFloat(data.specialAllowance || 0));
+        parseFloat(data.increment || 0) +
+        parseFloat(data.da || 0) +
+        parseFloat(data.hra || 0) +
+        parseFloat(data.specialAllowance || 0));
 
-    // Calculate net payable salary
     const totalDeductions =
       (parseFloat(data.lopAmount || 0) +
-      parseFloat(data.professionalTax || 0) +
-      parseFloat(data.tds || 0));
+        parseFloat(data.professionalTax || 0) +
+        parseFloat(data.tds || 0));
 
     const netPayable = totalEarnings - totalDeductions;
+
+    // Optional: Validate sickLeave
+    if (data.sickLeave && isNaN(data.sickLeave)) {
+      return res.status(400).json({ error: 'Invalid value for sickLeave' });
+    }
 
     const slip = await SalarySlip.create({
       ...data,

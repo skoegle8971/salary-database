@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 const {sequelize }= require('./db');
 
 const SalarySlip = sequelize.define('SalarySlip', {
+  id: {type: DataTypes.INTEGER,autoIncrement: true,primaryKey: true,},
   name: { type: DataTypes.STRING, allowNull: false },
   designation: { type: DataTypes.STRING, allowNull: false },
   department: { type: DataTypes.STRING },
@@ -18,6 +19,7 @@ const SalarySlip = sequelize.define('SalarySlip', {
   totalWorkingDays: { type: DataTypes.INTEGER },
   actualPayableDays: { type: DataTypes.INTEGER },
   paidLeave: { type: DataTypes.INTEGER },
+  sickLeave:{type:DataTypes.INTEGER},
   lopDays: { type: DataTypes.INTEGER },
   date: { type: DataTypes.STRING }, // e.g., 23-05-2025
   month: { type: DataTypes.STRING }, // e.g., May 2025
