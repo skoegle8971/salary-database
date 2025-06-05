@@ -112,8 +112,9 @@ export default function Home() {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
+               <TableCell>Emp Id</TableCell>
               <TableCell>Designation</TableCell>
-              <TableCell>Company</TableCell>
+              {/* <TableCell>Company</TableCell> */}
               <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
               <TableCell>Total Earnings</TableCell>
@@ -124,8 +125,9 @@ export default function Home() {
             {employees.map(emp => (
               <TableRow key={emp.id}>
                 <TableCell>{emp.name}</TableCell>
+                  <TableCell>{emp.employeeNumber}</TableCell>
                 <TableCell>{emp.designation}</TableCell>
-                <TableCell>{emp.companyName}</TableCell>
+                {/* <TableCell>{emp.companyName}</TableCell> */}
                 <TableCell>{emp.email}</TableCell>
                 <TableCell>{emp.phoneNumber}</TableCell>
                 <TableCell>{emp.totalEarnings}</TableCell>

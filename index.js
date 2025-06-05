@@ -8,6 +8,7 @@ const SalarySlip = require('./salarry');
 const app = express();
 const moment = require('moment');
 const PORT = 3000;
+require("dotenv").config()
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

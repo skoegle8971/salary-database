@@ -125,7 +125,7 @@ img.src = "/LOGO.png";
       ["Basic", slip.baseSalary + slip.increment, "LOP", slip.lopAmount],
       ["DA", slip.da, "Professional Tax", slip.professionalTax],
       ["HRA", slip.hra, "TDS", slip.tds],
-      ["Conveyance Allowance", slip.specialAllowance, "", ""],
+      ["Convenience Allowance", slip.specialAllowance, "", ""],
       ["Total Earnings (A)", slip.totalEarnings, "Total Deduction (B)", slip.professionalTax + slip.tds + slip.lopAmount],
     ];
 
@@ -162,7 +162,7 @@ img.src = "/LOGO.png";
         Salary Slips - {employee?.name || employeeNumber}
       </Typography>
       <Typography variant="subtitle1" gutterBottom>
-        Employee #: {employee?.employeeNumber || employeeNumber}
+        Employee: {employee?.employeeNumber || employeeNumber}
       </Typography>
 
       <Box sx={{ my: 2 }}>
@@ -216,14 +216,14 @@ img.src = "/LOGO.png";
               <Divider sx={{ my: 2 }} />
 
               <Typography><strong>Name:</strong> {selectedSlip.name}</Typography>
-              <Typography><strong>Employee #:</strong> {selectedSlip.employeeNumber}</Typography>
+              <Typography><strong>Employee:</strong> {selectedSlip.employeeNumber}</Typography>
               <Typography><strong>Designation:</strong> {selectedSlip.designation}</Typography>
               <Typography><strong>Department:</strong> {selectedSlip.department}</Typography>
 
               <Divider sx={{ my: 2 }} />
 
               <Typography><strong>Month:</strong> {selectedSlip.month}</Typography>
-              <Typography><strong>Year:</strong> {selectedSlip.year}</Typography>
+              {/* <Typography><strong>Year:</strong> {selectedSlip.year}</Typography> */}
               <Typography><strong>Date:</strong> {selectedSlip.date}</Typography>
               <Typography><strong>Total Working Days:</strong> {selectedSlip.totalWorkingDays}</Typography>
               <Typography><strong>Actual Payable Days:</strong> {selectedSlip.actualPayableDays}</Typography>
@@ -236,7 +236,7 @@ img.src = "/LOGO.png";
               <Typography><strong>Base Salary:</strong> {selectedSlip.baseSalary + selectedSlip.increment}</Typography>
               <Typography><strong>DA:</strong> {selectedSlip.da}</Typography>
               <Typography><strong>HRA:</strong> {selectedSlip.hra}</Typography>
-              <Typography><strong>Conveyance Allowance:</strong> {selectedSlip.specialAllowance}</Typography>
+              <Typography><strong>Convenience Allowance:</strong> {selectedSlip.specialAllowance}</Typography>
               <Typography><strong>Total Earnings:</strong> {selectedSlip.totalEarnings}</Typography>
 
               <Divider sx={{ my: 2 }} />
@@ -245,7 +245,7 @@ img.src = "/LOGO.png";
               <Typography><strong>TDS:</strong> {selectedSlip.tds}</Typography>
               <Typography><strong>LOP Amount:</strong> {selectedSlip.lopAmount}</Typography>
               <Typography><strong>Net Payable:</strong> {selectedSlip.netPayable}</Typography>
-              <Typography><strong>Total Deduction:</strong> {selectedSlip.totalDeductions}</Typography>
+              <Typography><strong>Total Deduction:</strong> {selectedSlip.professionalTax+selectedSlip.tds+selectedSlip.lopAmount+selectedSlip.professionalTax}</Typography>
 
               <Divider sx={{ my: 3 }} />
 
