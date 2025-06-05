@@ -1,26 +1,24 @@
 {
-  "name": "employes-details",
+  "name": "salary-database",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "build": "git pull origin main && cd client && npm ci && cd .. && npm ci && touch .env",
-    "start": "concurrently \"cd client && npm run dev\" \"npm run dev\""
+    "build": "git pull origin main && cd client && npm ci && cd .. && cd server && npm ci && touch .env",
+    "start": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skoegle8971/salary-database.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skoegle8971/salary-database/issues"
+  },
+  "homepage": "https://github.com/skoegle8971/salary-database#readme",
   "description": "",
   "dependencies": {
-    "body-parser": "^2.2.0",
-    "concurrently": "^9.1.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "moment": "^2.30.1",
-    "morgan": "^1.10.0",
-    "pg": "^8.16.0",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7"
+    "concurrently": "^9.1.2"
   }
 }
