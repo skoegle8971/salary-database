@@ -245,7 +245,7 @@ img.src = "/LOGO.png";
               <Typography><strong>TDS:</strong> {selectedSlip.tds}</Typography>
               <Typography><strong>LOP Amount:</strong> {selectedSlip.lopAmount}</Typography>
               <Typography><strong>Net Payable:</strong> {selectedSlip.netPayable}</Typography>
-              <Typography><strong>Total Deduction:</strong> {selectedSlip.professionalTax+selectedSlip.tds+selectedSlip.lopAmount+selectedSlip.professionalTax}</Typography>
+              <Typography><strong>Total Deduction:</strong> {selectedSlip.professionalTax+selectedSlip.tds+selectedSlip.lopAmount}</Typography>
 
               <Divider sx={{ my: 3 }} />
 
