@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "build": "cd client && npm ci && cd .. && npm ci ",
+    "build": "cd client && npm ci && cd .. && npm ci && touch .env",
     "start": "concurrently \"cd client && npm run dev\" \"npm run dev\""
   },
   "keywords": [],
