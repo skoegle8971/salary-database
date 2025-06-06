@@ -7,7 +7,7 @@ const Employee = require('./module');
 const SalarySlip = require('./salarry');
 const app = express();
 const moment = require('moment');
-const PORT = 3000;
+const PORT = 3001;
 require("dotenv").config()
 app.use(cors());
 app.use(express.json());
