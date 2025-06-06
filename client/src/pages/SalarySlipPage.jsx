@@ -67,94 +67,120 @@ export default function SalarySlipPage() {
     });
   };
 
-  const handleInputChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+const handleInputChange = (e) => {
+  setForm({ ...form, [e.target.name]: e.target.value });
+};
+
+const handleSubmitCreateSlip = async () => {
+  try {
+    await axios.post(`${apiUrl}/generate`, {
+      ...employee,
+      ...form
+    });
+    handleCloseCreateModal();
+    fetchSalarySlips();
+  } catch (err) {
+    console.error("Error generating slip:", err);
+  }
+};
+
+const handleView = (slip) => {
+  setSelectedSlip(slip);
+  setOpenModal(true);
+};
+
+// Helper: Convert number to words
+const numberToWords = (num) => {
+  const a = [
+    '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+    'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
+    'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'
+  ];
+  const b = [
+    '', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'
+  ];
+
+  const inWords = (n) => {
+    if (n < 20) return a[n];
+    if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + a[n % 10] : '');
+    if (n < 1000) return a[Math.floor(n / 100)] + ' Hundred' + (n % 100 !== 0 ? ' and ' + inWords(n % 100) : '');
+    if (n < 100000) return inWords(Math.floor(n / 1000)) + ' Thousand' + (n % 1000 !== 0 ? ' ' + inWords(n % 1000) : '');
+    if (n < 10000000) return inWords(Math.floor(n / 100000)) + ' Lakh' + (n % 100000 !== 0 ? ' ' + inWords(n % 100000) : '');
+    return inWords(Math.floor(n / 10000000)) + ' Crore' + (n % 10000000 !== 0 ? ' ' + inWords(n % 10000000) : '');
   };
 
-  const handleSubmitCreateSlip = async () => {
-    try {
-      await axios.post(`${apiUrl}/generate`, {
-        ...employee,
-        ...form
-      });
-      handleCloseCreateModal();
-      fetchSalarySlips();
-    } catch (err) {
-      console.error("Error generating slip:", err);
-    }
-  };
+  return inWords(num) + ' Only';
+};
 
-  const handleView = (slip) => {
-    setSelectedSlip(slip);
-    setOpenModal(true);
-  };
 const img = new Image();
 img.src = "/LOGO.png";
-  const handleDownload = (slip) => {
-    const doc = new jsPDF("p", "pt", "a4");
-    const leftMargin = 40;
-    let y = 40;
 
-    doc.setFont("Times", "bold");
-    doc.setFontSize(14);
+const handleDownload = (slip) => {
+  const doc = new jsPDF("p", "pt", "a4");
+  const leftMargin = 40;
+  let y = 40;
+
+  doc.setFont("Times", "bold");
+  doc.setFontSize(14);
   doc.addImage(img, "PNG", 40, 20, 50, 50);
-    doc.text("SKOEGLE IOT INNOVATIONS PRIVATE LIMITED", 300, y, { align: "center" });
-    y += 18;
-    doc.setFontSize(10);
-    doc.setFont("Times", "normal");
-    doc.text(
-      "52/2, 2nd main road. Vyalikaval, Lower Palace Orchards, Malleshwaram, Bangalore-560003 ",
-      300,
-      y,
-      { align: "center" }
-    );
-    y += 20;
+  doc.text("SKOEGLE IOT INNOVATIONS PRIVATE LIMITED", 300, y, { align: "center" });
+  y += 18;
 
-    doc.setFontSize(12);
-    doc.setFont("Times", "bold");
-    doc.text(`PAYSLIP FOR THE MONTH OF ${slip.month.toUpperCase()}`, 300, y, { align: "center" });
-    y += 25;
+  doc.setFontSize(10);
+  doc.setFont("Times", "normal");
+  doc.text(
+    "52/2, 2nd main road. Vyalikaval, Lower Palace Orchards, Malleshwaram, Bangalore-560003 ",
+    300,
+    y,
+    { align: "center" }
+  );
+  y += 20;
 
-    const data = [
-      ["Name", slip.name, "Total Working Days", slip.totalWorkingDays],
-      ["Designation", slip.designation, "Actual Payable Days", slip.actualPayableDays],
-      ["Department", slip.department, "Paid Leave", slip.paidLeave],
-      ["Employee No.", slip.employeeNumber, "Sick Leave", slip.sickLeave],
-      ["LOP", slip.lopDays, "", ""],
-      ["Earnings", "Amount (Rs.)", "Deductions", "Amount (Rs.)"],
-      ["Basic", slip.baseSalary + slip.increment, "LOP", slip.lopAmount],
-      ["DA", slip.da, "Professional Tax", slip.professionalTax],
-      ["HRA", slip.hra, "TDS", slip.tds],
-      ["Convenience Allowance", slip.specialAllowance, "", ""],
-      ["Total Earnings (A)", slip.totalEarnings, "Total Deduction (B)", slip.professionalTax + slip.tds + slip.lopAmount],
-    ];
+  doc.setFontSize(12);
+  doc.setFont("Times", "bold");
+  doc.text(`PAYSLIP FOR THE MONTH OF ${slip.month.toUpperCase()}`, 300, y, { align: "center" });
+  y += 25;
 
-    const colWidths = [130, 100, 130, 130];
-    data.forEach((row) => {
-      let x = leftMargin;
-      row.forEach((text, index) => {
-        doc.rect(x, y, colWidths[index], 20);
-        doc.setFont("Times", index === 0 || index === 2 ? "bold" : "normal");
-        if (text) doc.text(String(text), x + 5, y + 14);
-        x += colWidths[index];
-      });
-      y += 20;
+  const data = [
+    ["Name", slip.name, "Total Working Days", slip.totalWorkingDays],
+    ["Designation", slip.designation, "Actual Payable Days", slip.actualPayableDays],
+    ["Department", slip.department, "Paid Leave", slip.paidLeave],
+    ["Employee No.", slip.employeeNumber, "Sick Leave", slip.sickLeave],
+    ["LOP", slip.lopDays, "", ""],
+    ["Earnings", "Amount (Rs.)", "Deductions", "Amount (Rs.)"],
+    ["Basic", slip.baseSalary + slip.increment, "LOP", slip.lopAmount],
+    ["DA", slip.da, "Professional Tax", slip.professionalTax],
+    ["HRA", slip.hra, "TDS", slip.tds],
+    ["Convenience Allowance", slip.specialAllowance, "", ""],
+    ["Total Earnings (A)", slip.totalEarnings, "Total Deduction (B)", slip.professionalTax + slip.tds + slip.lopAmount],
+  ];
+
+  const colWidths = [130, 100, 130, 130];
+  data.forEach((row) => {
+    let x = leftMargin;
+    row.forEach((text, index) => {
+      doc.rect(x, y, colWidths[index], 20);
+      doc.setFont("Times", index === 0 || index === 2 ? "bold" : "normal");
+      if (text) doc.text(String(text), x + 5, y + 14);
+      x += colWidths[index];
     });
-
-    y += 15;
-    doc.setFont("Times", "bold");
-    doc.setFontSize(11);
-    doc.text(`Net Pay in Rs.: ${slip.netPayable}`, leftMargin, y);
     y += 20;
-    doc.text(`Net Pay in words: ${slip.netPayableWords || "Twenty Four Thousand Only"}`, leftMargin, y);
+  });
 
-    y += 25;
-    doc.setFontSize(9);
-    doc.setFont("Times", "italic");
-    doc.text("This is a system-generated payslip and does not require a signature.", leftMargin, y);
+  y += 15;
+  doc.setFont("Times", "bold");
+  doc.setFontSize(11);
+  doc.text(`Net Pay in Rs.: ${slip.netPayable}`, leftMargin, y);
+  y += 20;
+  doc.text(`Net Pay in words: ${numberToWords(slip.netPayable)}`, leftMargin, y); // 💡 Dynamic
 
-    doc.save(`${slip.name}-${slip.month}-salary-slip.pdf`);
-  };
+  y += 25;
+  doc.setFontSize(9);
+  doc.setFont("Times", "italic");
+  doc.text("This is a system-generated payslip and does not require a signature.", leftMargin, y);
+
+  doc.save(`${slip.name}-${slip.month}-salary-slip.pdf`);
+};
 
   return (
     <Container>
