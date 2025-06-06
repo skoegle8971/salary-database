@@ -6,7 +6,7 @@ import {
   TableRow, TableCell, TableBody, TableContainer, Stack, Modal, Divider, TextField
 } from '@mui/material';
 import { jsPDF } from 'jspdf';
-
+import {apiUrl }from "../Config"
 export default function SalarySlipPage() {
   const { employeeNumber } = useParams();
   const { state } = useLocation();
@@ -31,7 +31,7 @@ export default function SalarySlipPage() {
 
   const fetchSalarySlips = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/${employeeNumber}/all`);
+      const res = await axios.get(`${apiUrl}/${employeeNumber}/all`);
       setSlips(res.data);
     } catch (err) {
       console.error("Error fetching slips:", err);
@@ -40,7 +40,7 @@ export default function SalarySlipPage() {
 
   useEffect(() => {
     if (!employee) {
-      axios.get(`http://localhost:3000/${employeeNumber}`)
+      axios.get(`${apiUrl}/${employeeNumber}`)
         .then(res => setEmployee(res.data))
         .catch(err => console.error("Error fetching employee:", err));
     }
@@ -73,7 +73,7 @@ export default function SalarySlipPage() {
 
   const handleSubmitCreateSlip = async () => {
     try {
-      await axios.post('http://localhost:3000/generate', {
+      await axios.post(`${apiUrl}/generate`, {
         ...employee,
         ...form
       });

@@ -7,7 +7,7 @@ import {
   TextField, DialogActions, IconButton
 } from '@mui/material';
 import { Edit, Delete, Receipt } from '@mui/icons-material';
-
+import {apiUrl }from "../Config"
 export default function Home() {
   const navigate = useNavigate(); 
   const [employees, setEmployees] = useState([]);
@@ -22,7 +22,7 @@ export default function Home() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get('http://localhost:3000');
+      const res = await axios.get(`${apiUrl}`);
       setEmployees(res.data);
     } catch (err) {
       console.error('Error fetching employees:', err);
@@ -59,7 +59,7 @@ export default function Home() {
 
   const handleEditClick = async (employeeNumber) => {
     try {
-      const res = await axios.get(`http://localhost:3000/${employeeNumber}`);
+      const res = await axios.get(`${apiUrl}/${employeeNumber}`);
       setFormData(res.data);
       setEditing(true);
       setOpen(true);
@@ -71,7 +71,7 @@ export default function Home() {
   const handleDeleteClick = async (employeeNumber) => {
     if (confirm('Are you sure you want to delete this employee?')) {
       try {
-        await axios.delete(`http://localhost:3000/${employeeNumber}`);
+        await axios.delete(`${apiUrl}/${employeeNumber}`);
         fetchEmployees();
       } catch (err) {
         console.error('Error deleting employee:', err);
@@ -82,7 +82,7 @@ export default function Home() {
   const handleSubmit = async () => {
     try {
       if (editing) {
-        await axios.put(`http://localhost:3000/${formData.employeeNumber}`, {
+        await axios.put(`${apiUrl}/${formData.employeeNumber}`, {
           baseSalary: Number(formData.baseSalary),
           increment: Number(formData.increment),
           da: Number(formData.da),
@@ -90,7 +90,7 @@ export default function Home() {
           specialAllowance: Number(formData.specialAllowance),
         });
       } else {
-        await axios.post('http://localhost:3000/employee', formData);
+        await axios.post(`${apiUrl}/employee`, formData);
       }
       setOpen(false);
       fetchEmployees();
