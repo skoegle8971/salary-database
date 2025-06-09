@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 import {
   Container, Typography, Table, TableBody, TableCell, TableContainer,
@@ -106,7 +106,7 @@ export default function Home() {
       <Button variant="contained" color="primary" onClick={handleAddClick}>
         Add New Employee
       </Button>
-
+     
       <TableContainer component={Paper} sx={{ marginTop: 3 }}>
         <Table>
           <TableHead>

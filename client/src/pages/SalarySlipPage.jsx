@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams ,Link} from 'react-router-dom';
 import axios from 'axios';
 import {
   Container, Typography, Button, Paper, Box, Table, TableHead,
@@ -239,6 +239,12 @@ export default function SalarySlipPage() {
           Create Salary Slip
         </Button>
       </Box>
+       <Link to="/" style={{ textDecoration: 'none' }}>
+        <Button variant="contained" color="secondary" style={{ marginLeft: 10 }}>
+       Home
+        </Button>
+      </Link>
+
 
       {/* Create Slip Modal */}
       <Modal open={openCreateModal} onClose={handleCloseCreateModal}>
