@@ -119,72 +119,111 @@ export default function SalarySlipPage() {
   const img = new window.Image();
   img.src = "/LOGO.png";
 
-  const handleDownload = (slip) => {
-    const doc = new jsPDF("p", "pt", "a4");
-    const leftMargin = 40;
-    let y = 40;
+ const handleDownload = (slip) => {
+  const doc = new jsPDF("p", "pt", "a4");
+  const leftMargin = 40;
+  let y = 40;
 
-    doc.setFont("Times", "bold");
-    doc.setFontSize(14);
-    doc.addImage(img, "PNG", 40, 20, 50, 50);
-    doc.text("SKOEGLE IOT INNOVATIONS PRIVATE LIMITED", 300, y, { align: "center" });
-    y += 18;
+  const colWidths = [130, 160, 130, 80]; // Adjust widths as needed
+  const padding = 5;
 
-    doc.setFontSize(10);
-    doc.setFont("Times", "normal");
-    doc.text(
-      "52/2, 2nd main road. Vyalikaval, Lower Palace Orchards, Malleshwaram, Bangalore-560003 ",
-      300,
-      y,
-      { align: "center" }
-    );
-    y += 20;
+  // Header
+  doc.setFont("Times", "bold");
+  doc.setFontSize(14);
+  doc.addImage(img, "PNG", 40, 20, 50, 50);
+  doc.text("SKOEGLE IOT INNOVATIONS PRIVATE LIMITED", 300, y, { align: "center" });
+  y += 18;
 
-    doc.setFontSize(12);
-    doc.setFont("Times", "bold");
-    doc.text(`PAYSLIP FOR THE MONTH OF ${slip.month?.toUpperCase()}`, 300, y, { align: "center" });
-    y += 25;
+  doc.setFontSize(10);
+  doc.setFont("Times", "normal");
+  doc.text("52/2, 2nd main road. Vyalikaval, Lower Palace Orchards, Malleshwaram, Bangalore-560003", 300, y, { align: "center" });
+  y += 20;
 
-    const data = [
-      ["Name", slip.name, "Total Working Days", slip.totalWorkingDays],
-      ["Designation", slip.designation, "Actual Payable Days", slip.actualPayableDays],
-      ["Department", slip.department, "Paid Leave", slip.paidLeave],
-      ["Employee No.", slip.employeeNumber, "Sick Leave", slip.sickLeave],
-      ["LOP", slip.lopDays, "", ""],
-      ["Earnings", "Amount (Rs.)", "Deductions", "Amount (Rs.)"],
-      ["Basic", Number(slip.baseSalary) + Number(slip.increment), "LOP", slip.lopAmount],
-      ["DA", slip.da, "Professional Tax", slip.professionalTax],
-      ["HRA", slip.hra, "TDS", slip.tds],
-      ["Convenience Allowance", slip.specialAllowance, "", ""],
-      ["Total Earnings (A)", slip.totalEarnings, "Total Deduction (B)", Number(slip.professionalTax) + Number(slip.tds) + Number(slip.lopAmount)],
-    ];
+  doc.setFontSize(12);
+  doc.setFont("Times", "bold");
+  doc.text(`PAYSLIP FOR THE MONTH OF ${slip.month?.toUpperCase()}`, 300, y, { align: "center" });
+  y += 25;
 
-    const colWidths = [130, 100, 130, 130];
-    data.forEach((row) => {
-      let x = leftMargin;
-      row.forEach((text, index) => {
-        doc.rect(x, y, colWidths[index], 20);
-        doc.setFont("Times", index === 0 || index === 2 ? "bold" : "normal");
-        if (text) doc.text(String(text), x + 5, y + 14);
-        x += colWidths[index];
-      });
-      y += 20;
+  // Updated drawRow function supporting text wrap and dynamic height
+  const drawRow = (row, fontStyles = ["bold", "normal", "bold", "normal"], baseRowHeight = 20, widths = colWidths) => {
+    let x = leftMargin;
+    let maxLines = 1;
+    const linesPerCell = [];
+
+    // Calculate line-wrapped text for each cell
+    row.forEach((text, i) => {
+      const width = widths[i] - 2 * padding;
+      doc.setFont("Times", fontStyles[i] || "normal");
+
+      if (text !== undefined && text !== null) {
+        const lines = doc.splitTextToSize(String(text), width);
+        linesPerCell.push(lines);
+        maxLines = Math.max(maxLines, lines.length);
+      } else {
+        linesPerCell.push([""]);
+      }
     });
 
-    y += 15;
-    doc.setFont("Times", "bold");
-    doc.setFontSize(11);
-    doc.text(`Net Pay in Rs.: ${slip.netPayable}`, leftMargin, y);
-    y += 20;
-    doc.text(`Net Pay in words: ${numberToWords(slip.netPayable)}`, leftMargin, y);
+    const rowHeight = baseRowHeight * maxLines;
 
-    y += 25;
-    doc.setFontSize(9);
-    doc.setFont("Times", "italic");
-    doc.text("This is a system-generated payslip and does not require a signature.", leftMargin, y);
+    // Draw cells and insert wrapped text lines
+    row.forEach((_, i) => {
+      const width = widths[i];
+      doc.rect(x, y, width, rowHeight);
 
-    doc.save(`${slip.name}-${slip.month}-salary-slip.pdf`);
+      const lines = linesPerCell[i];
+      lines.forEach((line, j) => {
+        doc.text(line, x + padding, y + 14 + (j * baseRowHeight));
+      });
+
+      x += width;
+    });
+
+    y += rowHeight;
   };
+
+  // Employee Info Rows
+  drawRow(["Name", slip.name, "Total Working Days", slip.totalWorkingDays]);
+  drawRow(["Designation", slip.designation, "Actual Payable Days", slip.actualPayableDays]);
+  drawRow(["Department", slip.department, "Paid Leave", slip.paidLeave]);
+  drawRow(["Employee No.", slip.employeeNumber, "Sick Leave", slip.sickLeave]);
+  drawRow(["LOP", slip.lopDays, "", ""]);
+
+  // Earnings/Deductions Header
+  drawRow(["Earnings", "Amount (Rs.)", "Deductions", "Amount (Rs.)"], ["bold", "bold", "bold", "bold"]);
+
+  // Salary Breakdown
+  drawRow(["Basic", Number(slip.baseSalary) + Number(slip.increment), "LOP", slip.lopAmount]);
+  drawRow(["DA", slip.da, "Professional Tax", slip.professionalTax]);
+  drawRow(["HRA", slip.hra, "TDS", slip.tds]);
+  drawRow(["Convenience Allowance", slip.specialAllowance, "", ""]);
+  drawRow(
+    [
+      "Total Earnings (A)",
+      slip.totalEarnings,
+      "Total Deduction (B)",
+      Number(slip.professionalTax) + Number(slip.tds) + Number(slip.lopAmount),
+    ],
+    ["bold", "bold", "bold", "bold"]
+  );
+
+  // Net Pay Section
+  y += 15;
+  doc.setFont("Times", "bold");
+  doc.setFontSize(11);
+  doc.text(`Net Pay in Rs.: ${slip.netPayable}`, leftMargin, y);
+  y += 20;
+  doc.text(`Net Pay in words: ${numberToWords(slip.netPayable)}`, leftMargin, y);
+
+  // Footer
+  y += 25;
+  doc.setFontSize(9);
+  doc.setFont("Times", "italic");
+  doc.text("This is a system-generated payslip and does not require a signature.", leftMargin, y);
+
+  // Save PDF
+  doc.save(`${slip.name}-${slip.month}-salary-slip.pdf`);
+};
 
   return (
     <Container>
