@@ -5,7 +5,7 @@ export default defineConfig({
  base: "/",
  plugins: [react()],
  preview: {
-  port: 8080,
+  port: 80,
   strictPort: true,
  },
  server: {
