@@ -187,7 +187,7 @@ export default function SalarySlipPage() {
   drawRow(["Designation", slip.designation, "Actual Payable Days", slip.actualPayableDays]);
   drawRow(["Department", slip.department, "Paid Leave", slip.paidLeave]);
   drawRow(["Employee No.", slip.employeeNumber, "Sick Leave", slip.sickLeave]);
-  drawRow(["LOP", slip.lopDays, "", ""]);
+  drawRow(["LOP", slip.lopDays,  "DOJ", slip.dateOfJoining]);
 
   // Earnings/Deductions Header
   drawRow(["Earnings", "Amount (Rs.)", "Deductions", "Amount (Rs.)"], ["bold", "bold", "bold", "bold"]);
@@ -196,7 +196,7 @@ export default function SalarySlipPage() {
   drawRow(["Basic", Number(slip.baseSalary) + Number(slip.increment), "LOP", slip.lopAmount]);
   drawRow(["DA", slip.da, "Professional Tax", slip.professionalTax]);
   drawRow(["HRA", slip.hra, "TDS", slip.tds]);
-  drawRow(["Convenience Allowance", slip.specialAllowance, "", ""]);
+  drawRow(["Conveyance Allowance", slip.specialAllowance, "", ""]);
   drawRow(
     [
       "Total Earnings (A)",
@@ -294,6 +294,7 @@ export default function SalarySlipPage() {
               <Typography><strong>Employee:</strong> {selectedSlip.employeeNumber}</Typography>
               <Typography><strong>Designation:</strong> {selectedSlip.designation}</Typography>
               <Typography><strong>Department:</strong> {selectedSlip.department}</Typography>
+              <Typography><strong>Date of Joining:</strong> {selectedSlip.dateOfJoining}</Typography>
 
               <Divider sx={{ my: 2 }} />
 
