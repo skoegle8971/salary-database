@@ -310,7 +310,7 @@ export default function SalarySlipPage() {
               <Typography><strong>Base Salary:</strong> {Number(selectedSlip.baseSalary) + Number(selectedSlip.increment)}</Typography>
               <Typography><strong>DA:</strong> {selectedSlip.da}</Typography>
               <Typography><strong>HRA:</strong> {selectedSlip.hra}</Typography>
-              <Typography><strong>Convenience Allowance:</strong> {selectedSlip.specialAllowance}</Typography>
+              <Typography><strong>Conveyance Allowance:</strong> {selectedSlip.specialAllowance}</Typography>
               <Typography><strong>Total Earnings:</strong> {selectedSlip.totalEarnings}</Typography>
 
               <Divider sx={{ my: 2 }} />
