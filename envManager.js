@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-const MONGO_URI = 'mongodb://localhost:27017/envmanager';
-
 const envSchema = new mongoose.Schema({
   repoName: { type: String, required: true, unique: true },
   type: { type: String, enum: ['next', 'node'], required: true },
@@ -32,6 +30,13 @@ function detectType(clientPath) {
 }
 
 async function run() {
+  const [,, mongoUrlArg] = process.argv;
+
+  if (!mongoUrlArg) {
+    console.error('❌ Usage: node envManager.js <mongo_url>');
+    return;
+  }
+
   const basePath = process.cwd();
   const clientPath = path.join(basePath, 'client');
   const serverPath = path.join(basePath, 'server');
@@ -43,7 +48,7 @@ async function run() {
   const type = detectType(clientPath);
   console.log(`🔍 Detected repo: "${repoName}" (type: ${type})`);
 
-  await mongoose.connect(MONGO_URI);
+  await mongoose.connect(mongoUrlArg);
   const envData = await Env.findOne({ repoName });
   if (!envData) {
     console.error(`❌ No envs found in DB for "${repoName}"`);
