@@ -1,34 +1,40 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const {sequelize,connectToDatabase} = require('./db');
+const { sequelize, connectToDatabase } = require('./db');
 const cors = require('cors');
 const morgan = require('morgan');
 const Employee = require('./module');
 const SalarySlip = require('./salarry');
+const NodeCache = require('node-cache');
+const cache = new NodeCache({ stdTTL: 60 * 5 }); // 5 min TTL
 const app = express();
+const path = require('path');
 const moment = require('moment');
-const PORT = 3001;
-require("dotenv").config()
+const PORT = 3000;
+require("dotenv").config();
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
-connectToDatabase()
+connectToDatabase();
 app.use(bodyParser.json());
 
-app.post('/employee', async (req, res) => {
+// EMPLOYEE ENDPOINTS
+
+// CREATE Employee
+app.post('/api/employee', async (req, res) => {
   try {
     const {
       name, designation, department, employeeNumber, companyName,
       baseSalary, increment, da, hra, specialAllowance,
-      address, phoneNumber, email,dateOfBirth, dateOfJoining
+      address, phoneNumber, email, dateOfBirth, dateOfJoining
     } = req.body;
 
     const existingEmployee = await Employee.findOne({ where: { employeeNumber } });
     if (existingEmployee) {
       return res.status(400).json({ error: 'Employee with this employee number already exists' });
     }
-
 
     const totalEarnings = parseFloat(baseSalary) + parseFloat(increment) + parseFloat(da) + parseFloat(hra) + parseFloat(specialAllowance);
 
@@ -47,10 +53,11 @@ app.post('/employee', async (req, res) => {
       address,
       phoneNumber,
       email,
-        dateOfBirth,
-        dateOfJoining
+      dateOfBirth,
+      dateOfJoining
     });
 
+    cache.del('allEmployees');
     res.status(201).json({ message: 'Employee added successfully', employee: newEmployee });
   } catch (error) {
     console.error(error);
@@ -58,30 +65,40 @@ app.post('/employee', async (req, res) => {
   }
 });
 
-app.get('/', async (req, res) => {
+// GET all employees (cached)
+app.get('/api/', async (req, res) => {
   try {
-    const employees = await Employee.findAll();
+    const cacheKey = 'allEmployees';
+    let employees = cache.get(cacheKey);
+    if (!employees) {
+      employees = await Employee.findAll();
+      cache.set(cacheKey, employees);
+    }
     res.json(employees);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch employees' });
   }
 });
 
-app.get('/:employeeNumber', async (req, res) => {
+// GET employee by employeeNumber (cached)
+app.get('/api/:employeeNumber', async (req, res) => {
   try {
     const { employeeNumber } = req.params;
-    const employee = await Employee.findOne({ where: { employeeNumber } });
-
-    if (!employee) return res.status(404).json({ error: 'Employee not found' });
-
+    const cacheKey = `employee_${employeeNumber}`;
+    let employee = cache.get(cacheKey);
+    if (!employee) {
+      employee = await Employee.findOne({ where: { employeeNumber } });
+      if (!employee) return res.status(404).json({ error: 'Employee not found' });
+      cache.set(cacheKey, employee);
+    }
     res.json(employee);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch employee' });
   }
 });
 
-// UPDATE: Update employee by employeeNumber
-app.put('/:employeeNumber', async (req, res) => {
+// UPDATE employee by employeeNumber
+app.put('/api/:employeeNumber', async (req, res) => {
   try {
     const { employeeNumber } = req.params;
     const updates = req.body;
@@ -103,19 +120,23 @@ app.put('/:employeeNumber', async (req, res) => {
     }
 
     await employee.update(updates);
+    cache.del('allEmployees');
+    cache.del(`employee_${employeeNumber}`);
     res.json({ message: 'Employee updated successfully', employee });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update employee' });
   }
 });
 
-// DELETE: Delete employee by employeeNumber
-app.delete('/:employeeNumber', async (req, res) => {
+// DELETE employee by employeeNumber
+app.delete('/api/:employeeNumber', async (req, res) => {
   try {
     const { employeeNumber } = req.params;
     const deleted = await Employee.destroy({ where: { employeeNumber } });
 
     if (deleted) {
+      cache.del('allEmployees');
+      cache.del(`employee_${employeeNumber}`);
       res.json({ message: 'Employee deleted successfully' });
     } else {
       res.status(404).json({ error: 'Employee not found' });
@@ -125,14 +146,10 @@ app.delete('/:employeeNumber', async (req, res) => {
   }
 });
 
+// SALARY SLIP ENDPOINTS
 
-
-
-
-
-
-
-app.post('/generate', async (req, res) => {
+// Generate Salary Slip
+app.post('/api/generate', async (req, res) => {
   try {
     const data = req.body;
 
@@ -168,8 +185,8 @@ app.post('/generate', async (req, res) => {
   }
 });
 
-
-app.get('/:employeeNumber', async (req, res) => {
+// GET salary slip by employeeNumber
+app.get('/api/:employeeNumber/salary-slip', async (req, res) => {
   try {
     const slip = await SalarySlip.findOne({
       where: { employeeNumber: req.params.employeeNumber }
@@ -183,8 +200,8 @@ app.get('/:employeeNumber', async (req, res) => {
   }
 });
 
-
-app.get("/:employeeNumber/all", async (req, res) => {
+// GET all salary slips for an employee
+app.get("/api/:employeeNumber/all", async (req, res) => {
   try {
     const slips = await SalarySlip.findAll({
       where: { employeeNumber: req.params.employeeNumber }
@@ -198,8 +215,8 @@ app.get("/:employeeNumber/all", async (req, res) => {
   }
 });
 
-
-app.put('/:employeeNumber', async (req, res) => {
+// UPDATE salary slip by employeeNumber
+app.put('/api/:employeeNumber/salary-slip', async (req, res) => {
   try {
     const { employeeNumber } = req.params;
     const [updated] = await SalarySlip.update(req.body, {
@@ -214,7 +231,9 @@ app.put('/:employeeNumber', async (req, res) => {
     res.status(500).json({ error: 'Failed to update salary slip' });
   }
 });
-app.delete('/:employeeNumber', async (req, res) => {
+
+// DELETE salary slip by employeeNumber
+app.delete('/api/:employeeNumber/salary-slip', async (req, res) => {
   try {
     const deleted = await SalarySlip.destroy({
       where: { employeeNumber: req.params.employeeNumber }
@@ -228,7 +247,9 @@ app.delete('/:employeeNumber', async (req, res) => {
   }
 });
 
-app.post('/generate-experience-letter', async (req, res) => {
+// EXPERIENCE & RELIEVING LETTERS
+
+app.post('/api/generate-experience-letter', async (req, res) => {
   const { employeeNumber, lastWorkingDay } = req.body;
 
   try {
@@ -273,7 +294,7 @@ ${employee.companyName}
   }
 });
 
-app.post('/generate-relieving-letter', async (req, res) => {
+app.post('/api/generate-relieving-letter', async (req, res) => {
   const { employeeNumber, lastWorkingDay } = req.body;
 
   try {
@@ -318,8 +339,14 @@ ${employee.companyName}
   }
 });
 
+// SERVE CLIENT
+const distPath = path.join(__dirname, '../client/dist');
+app.use(express.static(distPath));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
 
-
+// DB Sync & Start Server
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

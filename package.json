@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "build": "git pull origin main && cd client && npm i && npm run build && cd .. && cd server && npm i && touch .env",
-    "start": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\""
+    "start": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
+      "deploy":"cd client && npm ci && cd .. && cd server && npm ci"
   },
   "repository": {
     "type": "git",
