@@ -27,6 +27,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: node envManager.js mongodb+srv://proectnova:qIPaIQWO0z9BjGgB@cluster0.eu4py.mongodb.net/envmanager
+    - run: node envManager.js ${secrets.MYENVS}
     - run: npm run deploy
     - run: pm2 restart all
