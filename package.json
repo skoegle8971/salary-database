@@ -5,7 +5,7 @@
   "scripts": {
     "build": "git pull origin main && node envManager.js && cd client && npm i && npm run build && cd .. && cd server && npm i && touch .env",
     "start": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
-      "deploy":"cd client && npm ci && cd .. && cd server && npm ci"
+    "deploy": "cd client && npm ci && cd .. && cd server && npm ci"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/skoegle8971/salary-database#readme",
   "description": "",
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "mongoose": "^8.15.2"
   }
 }
