@@ -13,14 +13,14 @@ const SalarySlip = sequelize.define('SalarySlip', {
   da: { type: DataTypes.FLOAT },
   hra: { type: DataTypes.FLOAT },
   specialAllowance: { type: DataTypes.FLOAT },
-  lopAmount: { type: DataTypes.FLOT },
-  professionalTax: { type: DataTypes.FLOT },
+  lopAmount: { type: DataTypes.FLOAT },
+  professionalTax: { type: DataTypes.FLOAT },
   tds: { type: DataTypes.FLOAT },
   totalWorkingDays: { type: DataTypes.FLOAT },
   actualPayableDays: { type: DataTypes.FLOAT },
   paidLeave: { type: DataTypes.FLOAT },
   sickLeave:{type:DataTypes.FLOAT},
-  lopDays: { type: DataTypes.FLT },
+  lopDays: { type: DataTypes.FLOAT },
   date: { type: DataTypes.STRING }, // e.g., 23-05-2025
   month: { type: DataTypes.STRING }, // e.g., May 2025
   dateOfJoining: { type: DataTypes.STRING },
