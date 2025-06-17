@@ -5,7 +5,7 @@
   "scripts": {
     "build": "git pull origin main && node envManager.js && cd client && npm i && npm run build && cd .. && cd server && npm i && touch .env",
     "start": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
-    "deploy": " cd client && npm ci && cd .. && cd server && npm ci && cd .. && git add . & git commit -m 'dssdydhfkfo' && git push"
+    "deploy": " cd client && npm ci && cd .. && cd server && npm ci && cd .. && git add . & git commit -m 'dssdydssdfkfo' && git push"
   },
   "repository": {
     "type": "git",
