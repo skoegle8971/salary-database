@@ -6,8 +6,8 @@ const Home = lazy(() => import('./pages/Home.jsx'));
 const SalarySlipPage = lazy(() => import('./pages/SalarySlipPage.jsx'));
 
 // Hardcoded credentials
-const USERID = 'admin';
-const PASSWORD = 'Skoegle@2025';
+const USERID = 'Skoegle';
+const PASSWORD = 'Skoegle@2019';
 
 // CSS-in-JS styles object
 const styles = {
